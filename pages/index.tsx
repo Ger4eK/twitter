@@ -11,7 +11,6 @@ const Home: NextPage = () => {
         <title>Twitter</title>
         <link rel='icon' href='/twitter.svg' />
       </Head>
-
       <main className='grid grid-cols-9'>
         <Sidebar />
         <Body />
