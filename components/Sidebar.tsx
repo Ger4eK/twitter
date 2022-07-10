@@ -13,7 +13,7 @@ import {
 
 const Sidebar = () => {
   return (
-    <div className='flex flex-col'>
+    <div className='col-span-2 flex flex-col items-center pt-3 px-4 md:items-start md:pt-0'>
       <Image
         src='https://links.papareact.com/drq'
         width={40}
