@@ -8,3 +8,4 @@
 - Heroicons
 - React Twitter Embed
 - React TimeAgo
+- React Hot Toast 
