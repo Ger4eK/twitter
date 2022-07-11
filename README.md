@@ -4,6 +4,7 @@
 - Tailwind CSS
 - Sanity
 - Next-Sanity
+- Groq (is about how we query sanity cms)
 - Heroicons
 - React Twitter Embed
-- Groq (is about how we query sanity cms)
+- React TimeAgo
