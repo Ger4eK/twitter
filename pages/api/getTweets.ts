@@ -7,7 +7,7 @@ const tweetQuery = groq`
 *[_type == "tweet" && !blockTweet] {
    _id,
    ...
- } | order(_createAt desc)
+ } | order(_createdAt desc)
  `;
 
 type Data = {
@@ -19,6 +19,6 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
   const tweets: Tweet[] = await sanityClient.fetch(tweetQuery);
-  
+
   res.status(200).json({ tweets });
 }
