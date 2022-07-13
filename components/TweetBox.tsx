@@ -5,9 +5,16 @@ import {
   PhotographIcon,
   SearchCircleIcon,
 } from '@heroicons/react/outline';
-import React, { useRef, useState } from 'react';
+import React, { Dispatch, SetStateAction, useRef, useState } from 'react';
+import toast from 'react-hot-toast';
+import { Tweet, TweetBody } from '../typings';
+import { fetchTweets } from '../utils/fetchTweets';
 
-const TweetBox = () => {
+interface Props {
+  setTweets: Dispatch<SetStateAction<Tweet[]>>;
+}
+
+const TweetBox = ({ setTweets }: Props) => {
   const [input, setInput] = useState('');
   const [image, setImage] = useState('');
 
@@ -23,6 +30,39 @@ const TweetBox = () => {
 
     setImage(imageInputRef.current.value);
     imageInputRef.current.value = '';
+    setImageUrlBoxIsOpen(false);
+  };
+
+  const postTweet = async () => {
+    const tweetBody: TweetBody = {
+      text: input,
+      username: 'Oleh Hreskiv',
+      profileImg:
+        'https://play-lh.googleusercontent.com/uh-YyABDPOU_NdZno8Eq11YkNu6BGNButL4YApda9rzc1YAHcLJyFYv7_yEy-s9Tbg',
+      image: image,
+    };
+
+    const result = await fetch(`api/addTweet`, {
+      body: JSON.stringify(tweetBody),
+      method: 'POST',
+    });
+
+    const json = await result.json();
+    const newTweets = await fetchTweets();
+    setTweets(newTweets);
+
+    toast('Tweet Posted', {
+      icon: '🚀',
+    });
+    return json;
+  };
+
+  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+
+    postTweet();
+    setInput('');
+    setImage('');
     setImageUrlBoxIsOpen(false);
   };
 
@@ -55,6 +95,7 @@ const TweetBox = () => {
               <LocationMarkerIcon className='h-5 w-5' />
             </div>
             <button
+              onClick={handleSubmit}
               disabled={!input}
               className='text-white bg-twitter px-5 py-2 font-bold rounded-full disabled:opacity-40'
             >
