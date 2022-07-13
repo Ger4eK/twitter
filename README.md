@@ -8,4 +8,5 @@
 - Heroicons
 - React Twitter Embed
 - React TimeAgo
-- React Hot Toast 
+- React Hot Toast
+- tailwind-scrollbar-hide
