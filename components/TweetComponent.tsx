@@ -124,7 +124,6 @@ const TweetComponent = ({ tweet }: Props) => {
           </button>
         </form>
       )}
-
       {comments?.length > 0 && (
         <div className='my-2 mt-5  space-y-5 overflow-y-scroll max-h-[215px] scrollbar-hide border-t border-gray-100 p-5'>
           {comments.map((comment) => (
