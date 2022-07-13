@@ -126,7 +126,7 @@ const TweetComponent = ({ tweet }: Props) => {
       )}
 
       {comments?.length > 0 && (
-        <div className='my-2 mt-5  space-y-5 overflow-y-scroll max-h-[215px] scrollbar-hide border-t border-gray-100 p-5'>
+        <div className='my-2 mt-5  space-y-5 overflow-y-scroll max-h-[215..px] scrollbar-hide border-t border-gray-100 p-5'>
           {comments.map((comment) => (
             <div key={comment._id} className=' relative flex space-x-2'>
               <hr className='absolute left-5 top-10 h-8 border-x border-twitter/30' />
