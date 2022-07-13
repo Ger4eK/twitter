@@ -1,4 +1,4 @@
-import { Comment, Tweet } from '../typings';
+import { Comment, CommentBody, Tweet } from '../typings';
 import TimeAgo from 'react-timeago';
 import {
   ChatAlt2Icon,
@@ -7,7 +7,8 @@ import {
   UploadIcon,
 } from '@heroicons/react/outline';
 import { fetchComments } from '../utils/fetchComments';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 interface Props {
   tweet: Tweet;
@@ -15,6 +16,8 @@ interface Props {
 
 const TweetComponent = ({ tweet }: Props) => {
   const [comments, setComments] = useState<Comment[]>([]);
+  const [commentBoxVisible, setCommentBoxVisible] = useState(false);
+  const [input, setInput] = useState('');
 
   const refreshComments = async () => {
     const comments: Comment[] = await fetchComments(tweet._id);
@@ -25,10 +28,38 @@ const TweetComponent = ({ tweet }: Props) => {
     refreshComments();
   }, []);
 
-  console.log(comments);
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const commentToast = toast.loading('Posting Comment...');
+
+    // Comment logic
+    const comment: CommentBody = {
+      comment: input,
+      tweetId: tweet._id,
+      username: 'Oleh Hreskiv',
+      profileImg:
+        'https://play-lh.googleusercontent.com/uh-YyABDPOU_NdZno8Eq11YkNu6BGNButL4YApda9rzc1YAHcLJyFYv7_yEy-s9Tbg',
+    };
+
+    const result = await fetch(`/api/addComment`, {
+      body: JSON.stringify(comment),
+      method: 'POST',
+    });
+    toast.success('Comment Posted!', {
+      id: commentToast,
+    });
+
+    setInput('');
+    setCommentBoxVisible(false);
+    refreshComments();
+  };
 
   return (
-    <div className='flex flex-col space-x-3 border-y p-5 border-gray-100'>
+    <div
+      key={tweet._id}
+      className='flex flex-col space-x-3 border-y p-5 border-gray-100'
+    >
       <div className='flex space-x-3 '>
         <img
           src={tweet.profileImg}
@@ -57,7 +88,10 @@ const TweetComponent = ({ tweet }: Props) => {
         </div>
       </div>
       <div className='flex justify-between mt-5'>
-        <div className='flex cursor-pointer items-center space-x-3 text-gray-400'>
+        <div
+          onClick={() => setCommentBoxVisible(!commentBoxVisible)}
+          className='flex cursor-pointer items-center space-x-3 text-gray-400'
+        >
           <ChatAlt2Icon className='h-5 w-5' />
           <p>{comments.length}</p>
         </div>
@@ -72,8 +106,27 @@ const TweetComponent = ({ tweet }: Props) => {
         </div>
       </div>
 
+      {commentBoxVisible && (
+        <form onSubmit={handleSubmit} className=' mt-3 flex space-x-3'>
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            type='text'
+            placeholder='Write a comment...'
+            className='flex-1 rounded-lg bg-gray-100 p-2 outline-none'
+          />
+          <button
+            disabled={!input}
+            type='submit'
+            className=' text-twitter disabled:text-gray-200'
+          >
+            Post
+          </button>
+        </form>
+      )}
+
       {comments?.length > 0 && (
-        <div className='my-2 mt-5  space-y-5 overflow-y-scroll scrollbar-hide border-t border-gray-100 p-5'>
+        <div className='my-2 mt-5  space-y-5 overflow-y-scroll max-h-[215px] scrollbar-hide border-t border-gray-100 p-5'>
           {comments.map((comment) => (
             <div key={comment._id} className=' relative flex space-x-2'>
               <hr className='absolute left-5 top-10 h-8 border-x border-twitter/30' />
