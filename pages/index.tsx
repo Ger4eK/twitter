@@ -30,12 +30,7 @@ const Home = ({ tweets }: Props) => {
 export default Home;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  //const tweets = await fetchTweets();
-
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/getTweets`);
-
-  const data = await res.json();
-  const tweets: Tweet[] = data.tweets;
+  const tweets = await fetchTweets();
 
   return {
     props: {
